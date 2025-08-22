@@ -48,7 +48,7 @@ def popup_ad():
     eggo = f"{random_adj} {random_verb} {random_noun}™, buy now at www.soundproofmichael.wave!".capitalize()
     edo += 1
     if eggo == "Soundproof michael wave™, buy now at www.soundproofmichael.wave!":
-        eggo = f"Soundproof michael wave™, buy now at www.soundproofmichael.wave!  The chances of this were one in {edo}."
+        eggo = f"Soundproof michael wave™, buy now at www.soundproofmichael.wave!  It took {edo} ads to get THE TRUE AD."
 
     label = ttk.Label(popup_window, text=eggo)
     label.pack(pady=10)

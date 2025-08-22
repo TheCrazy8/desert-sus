@@ -1,6 +1,7 @@
 import time
 import random
 import tkinter as tk
+from tkinter import ttk
 
 # Constants
 duration_seconds = 28800  # 8 hours
@@ -22,6 +23,23 @@ def reset_game_vars():
     }
 
 game_vars = reset_game_vars()
+word_list = ['apple', 'banana', 'cherry', 'date', 'elderberry']
+random_word = random.choice(word_list)
+word_list1 = ['red', 'green', 'blue', 'yellow', 'white']
+random_adj = random.choice(word_list1)
+word_list2 = ['apple', 'banana', 'cherry', 'date', 'elderberry']
+random_adj1 = random.choice(word_list2)
+
+def popup_ad():
+    popup_window = tk.Toplevel()
+    popup_window.wm_title("Pop-up Window")
+
+    label = ttk.Label(popup_window, text=f"{random_adj} {random_adj1} {random_word}, buy now at www.soundproofmichael.wave!")
+    label.pack(pady=10)
+
+    close_button = ttk.Button(popup_window, text="Close", command=popup_window.destroy)
+    close_button.pack(pady=5)
+    root.after(pickrandom(10,1000000), popup_ad)
 
 def game_over_screen(reason="GAME OVER"):
     canvas.create_text(window_width // 2, window_height // 2 - 20, text=reason, fill="red", font=('Helvetica', 24))

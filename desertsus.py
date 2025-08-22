@@ -37,7 +37,7 @@ word_list1 = ["happy", "blue", "quick", "bright", "cold", "silent", "fuzzy", "sh
 random_adj = random.choice(word_list1)
 word_list2 = ["running", "jumping", "swimming", "reading", "writing", "singing", "dancing", "laughing", "drawing", "playing","walking", "talking", "cooking", "driving", "painting", "flying", "hiking", "climbing", "listening", "watching", "learning", "growing", "shopping", "building", "fixing", "teaching", "helping", "cleaning", "resting", "eating", "sleeping", "smiling", "crying", "baking", "skating", "studying", "traveling", "exploring", "gardening", "fishing", "jogging", "sewing", "hunting", "pouring", "racing", "sitting", "screaming", "staring", "feeding", "yawning"]
 random_verb = random.choice(word_list2)
-print(f"{random_adj} {random_verb} {random_noun}, buy now at www.soundproofmichael.wave! (note: this is not a real link.)")
+print(f"{random_adj} {random_verb} {random_noun}, buy now at www.soundproofmichael.wave! (note: this is not a real link.)".capitalize())
 def popup_ad():
     popup_window = tk.Toplevel()
     popup_window.wm_title("Pop-up Window")

@@ -23,18 +23,26 @@ def reset_game_vars():
     }
 
 game_vars = reset_game_vars()
-word_list = ['apple', 'banana', 'cherry', 'date', 'elderberry']
-random_word = random.choice(word_list)
-word_list1 = ['red', 'green', 'blue', 'yellow', 'white']
+word_list = ["apple", "mountain", "computer", "river", "book", "forest", "ocean", "car", "house", "music",
+"dog", "city", "garden", "train", "cloud", "desk", "bridge", "star", "tree", "phone",
+"chair", "window", "beach", "plane", "flower", "castle", "lamp", "boat", "clock", "road",
+"school", "camera", "horse", "island", "tower", "lake", "shoe", "door", "cat", "field",
+"street", "cup", "hat", "table", "wall", "bed", "ring", "stone", "bird", "pen"]
+random_noun = random.choice(word_list)
+word_list1 = ["happy", "blue", "quick", "bright", "cold", "silent", "fuzzy", "shiny", "brave", "loud",
+"gentle", "bitter", "soft", "tall", "rough", "smooth", "tiny", "huge", "ancient", "fresh",
+"curious", "warm", "sharp", "calm", "dark", "sweet", "deep", "heavy", "light", "wild",
+"elegant", "greedy", "fragile", "bold", "lazy", "wise", "red", "green", "young", "old",
+"messy", "clean", "thick", "thin", "dull", "funny", "sad", "clear", "serious", "short"]
 random_adj = random.choice(word_list1)
-word_list2 = ['apple', 'banana', 'cherry', 'date', 'elderberry']
-random_adj1 = random.choice(word_list2)
-
+word_list2 = ["running", "jumping", "swimming", "reading", "writing", "singing", "dancing", "laughing", "drawing", "playing","walking", "talking", "cooking", "driving", "painting", "flying", "hiking", "climbing", "listening", "watching", "learning", "growing", "shopping", "building", "fixing", "teaching", "helping", "cleaning", "resting", "eating", "sleeping", "smiling", "crying", "baking", "skating", "studying", "traveling", "exploring", "gardening", "fishing", "jogging", "sewing", "hunting", "pouring", "racing", "sitting", "screaming", "staring", "feeding", "yawning"]
+random_verb = random.choice(word_list2)
+print(f"{random_adj} {random_verb} {random_noun}, buy now at www.soundproofmichael.wave! (note: this is not a real link.)")
 def popup_ad():
     popup_window = tk.Toplevel()
     popup_window.wm_title("Pop-up Window")
 
-    label = ttk.Label(popup_window, text=f"{random_adj} {random_adj1} {random_word}, buy now at www.soundproofmichael.wave!")
+    label = ttk.Label(popup_window, text=f"{random_adj} {random_verb} {random_noun}, buy now at www.soundproofmichael.wave!")
     label.pack(pady=10)
 
     close_button = ttk.Button(popup_window, text="Close", command=popup_window.destroy)

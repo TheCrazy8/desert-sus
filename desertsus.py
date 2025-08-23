@@ -56,7 +56,7 @@ def popup_ad():
 
     close_button = ttk.Button(popup_window, text="Close", command=popup_window.destroy)
     close_button.pack(pady=5)
-    root.after(random.randint(10,1000000), popup_ad)
+    root.after(random.randint(10,100000), popup_ad)
 
 def game_over_screen(reason="GAME OVER"):
     canvas.create_text(window_width // 2, window_height // 2 - 20, text=reason, fill="red", font=('Helvetica', 24))
@@ -163,8 +163,11 @@ def key_press(event):
         game_vars["facing"] = 1 if invert else -1
     elif event.keysym == 'Right':
         game_vars["facing"] = -1 if invert else 1
+    elif event.keysym == 'Escape':
+        root.destroy()
 
 root.bind('<KeyPress>', key_press)
 
+popup_ad()  # Start the first ad popup
 move_bus()  # Start game loop
 root.mainloop()

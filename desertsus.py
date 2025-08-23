@@ -29,7 +29,7 @@ game_vars = None  # will be set after window size is set
 
 def popup_ad():
     global edo
-    popup_window = tk.Toplevel()
+    popup_window = tk.Toplevel(root)
     popup_window.wm_title("Pop-up Window")
 
     word_list = ["apple", "mountain", "computer", "river", "book", "forest", "ocean", "car", "house", "music",

@@ -46,7 +46,32 @@ def popup_ad():
     max_x = max(0, root.winfo_width() - 400)
     max_y = max(0, root.winfo_height() - 120)
     popup_window.geometry(f"400x120+{root.winfo_x() + random.randint(0, max_x)}+{root.winfo_y() + random.randint(0, max_y)}")
-    popup_window.configure(bg="#fffbe6")
+
+    # Annoying: shake window
+    def shake():
+        for _ in range(10):
+            dx = random.randint(-10, 10)
+            dy = random.randint(-10, 10)
+            popup_window.geometry(f"400x120+{root.winfo_x() + random.randint(0, max_x) + dx}+{root.winfo_y() + random.randint(0, max_y) + dy}")
+            popup_window.update()
+            popup_window.after(30)
+    shake()
+
+    # Annoying: play bell sound (if available)
+    try:
+        popup_window.bell()
+    except:
+        pass
+
+    # Annoying: change background color rapidly
+    annoying_colors = ["#fffbe6", "#ffcccc", "#ccffcc", "#ccccff", "#ffff99", "#ff99ff", "#99ffff"]
+    def color_flash(count=0):
+        popup_window.configure(bg=random.choice(annoying_colors))
+        if count < 10:
+            popup_window.after(60, lambda: color_flash(count+1))
+        else:
+            popup_window.configure(bg="#fffbe6")
+    color_flash()
 
     # Improved ad text
     word_list = ["apple", "mountain", "computer", "river", "book", "forest", "ocean", "car", "house", "music",
@@ -68,29 +93,31 @@ def popup_ad():
     if eggo.lower().startswith("🔥 soundproof michael wave™"):
         eggo = f"🔥 SOUNDPROOF MICHAEL WAVE™ 🔥\nBuy now at www.soundproofmichael.wave!\nIt took {edo} ads to get THE TRUE AD."
 
+
     label = tk.Label(popup_window, text=eggo, font=("Comic Sans MS", 14, "bold"), fg="#d2691e", bg="#fffbe6", wraplength=380, justify="center")
     label.pack(pady=10, padx=10, fill="both", expand=True)
 
-    # Custom X button logic
+    # Annoying: spawn multiple X buttons that teleport
     x_escape_count = {'count': 0}
-
-    def teleport_x(event=None):
-        # Teleport the button to a random location in the popup
+    x_buttons = []
+    def teleport_x(btn, event=None):
         btn_width = 80
         btn_height = 30
-        max_x = 400 - btn_width
-        max_y = 120 - btn_height
-        new_x = random.randint(0, max_x)
-        new_y = random.randint(0, max_y)
-        close_button.place(x=new_x, y=new_y)
+        max_xb = 400 - btn_width
+        max_yb = 120 - btn_height
+        new_x = random.randint(0, max_xb)
+        new_y = random.randint(0, max_yb)
+        btn.place(x=new_x, y=new_y)
         x_escape_count['count'] += 1
         # Randomly close if escaped enough
         if x_escape_count['count'] >= random.randint(5, 12):
             popup_window.destroy()
 
-    close_button = tk.Button(popup_window, text="✖", font=("Arial", 16, "bold"), bg="#ffe4b5", fg="#333", relief="raised", bd=3, command=lambda: popup_window.destroy())
-    close_button.place(x=160, y=45, width=80, height=30)
-    close_button.bind('<Enter>', teleport_x)
+    for i in range(random.randint(2, 5)):
+        close_button = tk.Button(popup_window, text="✖", font=("Arial", 16, "bold"), bg="#ffe4b5", fg="#333", relief="raised", bd=3, command=lambda: popup_window.destroy())
+        close_button.place(x=random.randint(0, 320), y=random.randint(0, 90), width=80, height=30)
+        close_button.bind('<Enter>', lambda e, btn=close_button: teleport_x(btn, e))
+        x_buttons.append(close_button)
 
     # Remove window close button (force only custom X)
     popup_window.protocol("WM_DELETE_WINDOW", lambda: None)

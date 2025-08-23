@@ -157,10 +157,12 @@ def key_press(event):
             canvas.delete("all")
             move_bus()
         return
+    # Randomly invert steering (10% chance)
+    invert = random.random() < 0.1
     if event.keysym == 'Left':
-        game_vars["facing"] = -1
+        game_vars["facing"] = 1 if invert else -1
     elif event.keysym == 'Right':
-        game_vars["facing"] = 1
+        game_vars["facing"] = -1 if invert else 1
 
 root.bind('<KeyPress>', key_press)
 

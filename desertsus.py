@@ -102,7 +102,6 @@ def move_bus():
         game_over_screen("You got dysentry!")
         return
 
-
     # Only move sideways if steered or veered
     moved = False
     # Veer off occasionally

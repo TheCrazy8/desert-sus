@@ -11,7 +11,7 @@ road_width = 200
 window_width = 400
 window_height = 300
 bus_width = 40
-bus_height = 20
+bus_height = 60  # Make bus longer vertically
 bus_speed = 10  # pixels per move
 update_interval = 100  # ms
 
@@ -96,12 +96,20 @@ def move_bus():
         game_over_screen("BREAKDOWN!")
         return
 
-    # Randomly veer off occasionally
+
+    # Only move sideways if steered or veered
+    moved = False
+    # Veer off occasionally
     if random.random() < 0.05:
         direction = random.choice([-1, 1])
         game_vars["bus_x"] += direction * bus_speed
-    else:
+        moved = True
+    # Steer if facing is set by user
+    elif game_vars["facing"] != 0:
         game_vars["bus_x"] += game_vars["facing"] * bus_speed
+        moved = True
+    # Reset facing after move so bus only moves when key is pressed
+    game_vars["facing"] = 0
 
     # Check if bus is off the road
     road_left = (window_width - road_width) // 2

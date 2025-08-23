@@ -30,8 +30,12 @@ game_vars = None  # will be set after window size is set
 def popup_ad():
     global edo
     popup_window = tk.Toplevel(root)
-    popup_window.wm_title("Pop-up Window")
+    popup_window.wm_title("Special Offer!")
+    popup_window.attributes('-topmost', True)
+    popup_window.geometry(f"400x120+{root.winfo_x() + random.randint(0, root.winfo_width()-400)}+{root.winfo_y() + random.randint(0, root.winfo_height()-120)}")
+    popup_window.configure(bg="#fffbe6")
 
+    # Improved ad text
     word_list = ["apple", "mountain", "computer", "river", "book", "forest", "ocean", "car", "house", "music",
     "dog", "city", "garden", "train", "cloud", "desk", "bridge", "star", "tree", "phone",
     "chair", "window", "beach", "plane", "flower", "castle", "lamp", "boat", "clock", "road",
@@ -46,17 +50,43 @@ def popup_ad():
     random_adj = random.choice(word_list1)
     word_list2 = ["running", "jumping", "swimming", "reading", "writing", "singing", "dancing", "laughing", "drawing", "playing","walking", "talking", "cooking", "driving", "painting", "flying", "hiking", "climbing", "listening", "watching", "learning", "growing", "shopping", "building", "fixing", "teaching", "helping", "cleaning", "resting", "eating", "sleeping", "smiling", "crying", "baking", "skating", "studying", "traveling", "exploring", "gardening", "fishing", "jogging", "sewing", "hunting", "pouring", "racing", "sitting", "screaming", "staring", "feeding", "yawning"]
     random_verb = random.choice(word_list2)
-    eggo = f"{random_adj} {random_verb} {random_noun}™, buy now at www.soundproofmichael.wave!".capitalize()
+    eggo = f"🔥 {random_adj.upper()} {random_verb.upper()} {random_noun.upper()}™ 🔥\nBuy now at www.soundproofmichael.wave!"  # More visual
     edo += 1
-    if eggo == "Soundproof michael wave™, buy now at www.soundproofmichael.wave!":
-        eggo = f"Soundproof michael wave™, buy now at www.soundproofmichael.wave!  It took {edo} ads to get THE TRUE AD."
+    if eggo.lower().startswith("🔥 soundproof michael wave™"):
+        eggo = f"🔥 SOUNDPROOF MICHAEL WAVE™ 🔥\nBuy now at www.soundproofmichael.wave!\nIt took {edo} ads to get THE TRUE AD."
 
-    label = ttk.Label(popup_window, text=eggo)
-    label.pack(pady=10)
+    label = tk.Label(popup_window, text=eggo, font=("Comic Sans MS", 14, "bold"), fg="#d2691e", bg="#fffbe6", wraplength=380, justify="center")
+    label.pack(pady=10, padx=10, fill="both", expand=True)
 
-    close_button = ttk.Button(popup_window, text="Close", command=popup_window.destroy)
-    close_button.pack(pady=5)
-    root.after(random.randint(10,100000), popup_ad)
+    # Custom X button logic
+    x_escape_count = {'count': 0}
+
+    def teleport_x(event=None):
+        # Teleport the button to a random location in the popup
+        btn_width = 80
+        btn_height = 30
+        max_x = 400 - btn_width
+        max_y = 120 - btn_height
+        new_x = random.randint(0, max_x)
+        new_y = random.randint(0, max_y)
+        close_button.place(x=new_x, y=new_y)
+        x_escape_count['count'] += 1
+        # Randomly close if escaped enough
+        if x_escape_count['count'] >= random.randint(5, 12):
+            popup_window.destroy()
+
+    close_button = tk.Button(popup_window, text="✖", font=("Arial", 16, "bold"), bg="#ffe4b5", fg="#333", relief="raised", bd=3, command=lambda: popup_window.destroy())
+    close_button.place(x=160, y=45, width=80, height=30)
+    close_button.bind('<Enter>', teleport_x)
+
+    # Remove window close button (force only custom X)
+    popup_window.protocol("WM_DELETE_WINDOW", lambda: None)
+
+    # Make sure popup stays above game window
+    popup_window.lift()
+    popup_window.focus_force()
+
+    root.after(random.randint(2000, 8000), popup_ad)
 
 def game_over_screen(reason="GAME OVER"):
     canvas.create_text(window_width // 2, window_height // 2 - 20, text=reason, fill="red", font=('Helvetica', 24))

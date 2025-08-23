@@ -15,6 +15,7 @@ bus_height = 20
 bus_speed = 10  # pixels per move
 update_interval = 100  # ms
 
+
 # Game variables (will be reset)
 def reset_game_vars():
     return {
@@ -24,7 +25,7 @@ def reset_game_vars():
         "game_over": False
     }
 
-game_vars = reset_game_vars()
+game_vars = None  # will be set after window size is set
 
 def popup_ad():
     global edo
@@ -61,6 +62,29 @@ def game_over_screen(reason="GAME OVER"):
     canvas.create_text(window_width // 2, window_height // 2 - 20, text=reason, fill="red", font=('Helvetica', 24))
     canvas.create_text(window_width // 2, window_height // 2 + 20, text="Press R to Restart", fill="black", font=('Helvetica', 16))
 
+
+def draw_desert(canvas, road_left, road_right, window_width, window_height):
+    # Draw desert background (sand color)
+    canvas.create_rectangle(0, 0, window_width, window_height, fill="#EDC9Af", outline="")
+    # Add some random desert features (cacti, rocks)
+    for _ in range(15):
+        x = random.randint(0, window_width)
+        y = random.randint(0, window_height)
+        if x < road_left or x > road_right:
+            # Draw cactus
+            if random.random() < 0.5:
+                # Main stem
+                canvas.create_rectangle(x, y, x+8, y+40, fill="#228B22", outline="")
+                # Left arm
+                if random.random() < 0.5:
+                    canvas.create_rectangle(x-6, y+15, x+2, y+25, fill="#228B22", outline="")
+                # Right arm
+                if random.random() < 0.5:
+                    canvas.create_rectangle(x+6, y+20, x+14, y+30, fill="#228B22", outline="")
+            else:
+                # Draw rock
+                canvas.create_oval(x, y, x+18, y+12, fill="#A0522D", outline="")
+
 def move_bus():
     global game_vars
     if game_vars["game_over"]:
@@ -89,6 +113,7 @@ def move_bus():
 
     # Draw everything
     canvas.delete("all")
+    draw_desert(canvas, road_left, road_right, window_width, window_height)
     # Draw road
     canvas.create_rectangle(road_left, 0, road_right, window_height, fill="gray")
     # Draw bus
@@ -97,11 +122,18 @@ def move_bus():
     root.after(update_interval, move_bus)
 
 # Tkinter setup
+
 root = tk.Tk()
 root.title("Desert Bus")
+root.attributes('-fullscreen', True)
+
+window_width = root.winfo_screenwidth()
+window_height = root.winfo_screenheight()
 
 canvas = tk.Canvas(root, width=window_width, height=window_height)
-canvas.pack()
+canvas.pack(fill=tk.BOTH, expand=True)
+
+game_vars = reset_game_vars()
 
 def key_press(event):
     global game_vars

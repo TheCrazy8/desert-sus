@@ -56,7 +56,7 @@ def popup_ad():
 
     close_button = ttk.Button(popup_window, text="Close", command=popup_window.destroy)
     close_button.pack(pady=5)
-    root.after(pickrandom(10,1000000), popup_ad)
+    root.after(random.randint(10,1000000), popup_ad)
 
 def game_over_screen(reason="GAME OVER"):
     canvas.create_text(window_width // 2, window_height // 2 - 20, text=reason, fill="red", font=('Helvetica', 24))

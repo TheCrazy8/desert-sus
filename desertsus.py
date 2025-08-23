@@ -32,7 +32,9 @@ def popup_ad():
     popup_window = tk.Toplevel(root)
     popup_window.wm_title("Special Offer!")
     popup_window.attributes('-topmost', True)
-    popup_window.geometry(f"400x120+{root.winfo_x() + random.randint(0, root.winfo_width()-400)}+{root.winfo_y() + random.randint(0, root.winfo_height()-120)}")
+    max_x = max(0, root.winfo_width() - 400)
+    max_y = max(0, root.winfo_height() - 120)
+    popup_window.geometry(f"400x120+{root.winfo_x() + random.randint(0, max_x)}+{root.winfo_y() + random.randint(0, max_y)}")
     popup_window.configure(bg="#fffbe6")
 
     # Improved ad text

@@ -27,9 +27,20 @@ def reset_game_vars():
 
 game_vars = None  # will be set after window size is set
 
+ad_popup_ref = {'window': None}
+
 def popup_ad():
     global edo
+    # Close previous ad if it exists
+    if ad_popup_ref['window'] is not None:
+        try:
+            ad_popup_ref['window'].destroy()
+        except:
+            pass
+        ad_popup_ref['window'] = None
+
     popup_window = tk.Toplevel(root)
+    ad_popup_ref['window'] = popup_window
     popup_window.wm_title("Special Offer!")
     popup_window.attributes('-topmost', True)
     max_x = max(0, root.winfo_width() - 400)

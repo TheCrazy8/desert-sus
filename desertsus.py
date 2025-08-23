@@ -90,8 +90,8 @@ def move_bus():
     if game_vars["game_over"]:
         return
 
-    # Random breakdown chance (1/1000 per move)
-    if random.random() < 0.001:
+    # Random breakdown chance (1/1,000,000 per move)
+    if random.random() < 0.0000001:
         game_vars["game_over"] = True
         game_over_screen("BREAKDOWN!")
         return

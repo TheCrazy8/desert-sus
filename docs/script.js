@@ -137,7 +137,7 @@
       // Random dysentery
       if (!gameVars.game_over && Math.random() < dysenteryPerMove) {
         gameVars.game_over = true;
-        gameVars.reason = 'You got dysentery!';
+        gameVars.reason = 'You died of dysentery!';
       }
 
       // Move sideways if veer or input

@@ -169,7 +169,7 @@ def move_bus():
         # Random dysentry chance (1/1,000,000 per move)
     if random.random() < 0.0000001:
         game_vars["game_over"] = True
-        game_over_screen("You got dysentry!")
+        game_over_screen("You died of dysentry!")
         return
 
     # Only move sideways if steered or veered

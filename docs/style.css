@@ -1,0 +1,110 @@
+:root {
+  --ad-w: 400px;
+  --ad-h: 120px;
+  --ad-bg: #fffbe6;
+  --ad-fg: #d2691e;
+  --hud-bg: rgba(0,0,0,0.35);
+  --hud-fg: #fff;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000; /* while canvas initializes */
+  overflow: hidden;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+#gameCanvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  /* Canvas resolution is set in JS to match device pixels */
+}
+
+.hud {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  padding: 8px 12px;
+  text-align: center;
+  color: var(--hud-fg);
+  background: var(--hud-bg);
+  font-size: 14px;
+  user-select: none;
+  pointer-events: none;
+}
+
+.noscript {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #222;
+  color: #fff;
+  font-size: 18px;
+}
+
+/* Ad popup styles */
+.ad-popup {
+  position: fixed;
+  width: var(--ad-w);
+  height: var(--ad-h);
+  background: var(--ad-bg);
+  border: 2px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ad-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  background: #ffe4b5;
+  border-bottom: 1px solid #3333;
+  font-weight: 700;
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
+  color: #333;
+  user-select: none;
+}
+
+.ad-body {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+}
+
+.ad-text {
+  font-family: "Comic Neue", "Comic Sans MS", cursive;
+  color: var(--ad-fg);
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.ad-close {
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  background: #ffe4b5;
+  color: #333;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 #3335;
+  user-select: none;
+}
+
+.ad-close:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #3334;
+}

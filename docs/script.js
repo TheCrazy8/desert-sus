@@ -73,7 +73,7 @@
 
   // Color scheme management
   const originalColors = {
-    sand: '#EDC9Af',
+    sand: '#EDC9AF',
     cactus: '#228B22',
     rock: '#A0522D',
     road: 'gray',
@@ -82,14 +82,14 @@
   
   let currentColors = { ...originalColors };
   
+  function randomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  
   function randomizeColors() {
-    const randomColor = () => {
-      const r = Math.floor(Math.random() * 256);
-      const g = Math.floor(Math.random() * 256);
-      const b = Math.floor(Math.random() * 256);
-      return `rgb(${r}, ${g}, ${b})`;
-    };
-    
     currentColors = {
       sand: randomColor(),
       cactus: randomColor(),

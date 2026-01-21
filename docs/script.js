@@ -71,10 +71,42 @@
     }
   });
 
+  // Color scheme management
+  const originalColors = {
+    sand: '#EDC9AF',
+    cactus: '#228B22',
+    rock: '#A0522D',
+    road: 'gray',
+    bus: 'yellow'
+  };
+  
+  let currentColors = { ...originalColors };
+  
+  function randomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  
+  function randomizeColors() {
+    currentColors = {
+      sand: randomColor(),
+      cactus: randomColor(),
+      rock: randomColor(),
+      road: randomColor(),
+      bus: randomColor()
+    };
+  }
+  
+  function restoreColors() {
+    currentColors = { ...originalColors };
+  }
+
   // Drawing helpers
   function drawDesert(roadLeft, roadRight, ww, wh) {
     // sand background
-    ctx.fillStyle = '#EDC9Af';
+    ctx.fillStyle = currentColors.sand;
     ctx.fillRect(0, 0, ww, wh);
 
     // features
@@ -84,7 +116,7 @@
       if (x < roadLeft || x > roadRight) {
         if (Math.random() < 0.5) {
           // cactus
-          ctx.fillStyle = '#228B22';
+          ctx.fillStyle = currentColors.cactus;
           // main stem
           ctx.fillRect(x, y, 8, 40);
           // left arm
@@ -93,7 +125,7 @@
           if (Math.random() < 0.5) ctx.fillRect(x + 6, y + 20, 8, 10);
         } else {
           // rock
-          ctx.fillStyle = '#A0522D';
+          ctx.fillStyle = currentColors.rock;
           ctx.beginPath();
           ctx.ellipse(x + 9, y + 6, 9, 6, 0, 0, Math.PI * 2);
           ctx.fill();
@@ -110,11 +142,11 @@
 
     // background + road
     drawDesert(roadLeft, roadRight, ww, wh);
-    ctx.fillStyle = 'gray';
+    ctx.fillStyle = currentColors.road;
     ctx.fillRect(roadLeft, 0, roadWidth, wh);
 
     // bus
-    ctx.fillStyle = 'yellow';
+    ctx.fillStyle = currentColors.bus;
     ctx.fillRect(gameVars.bus_x, gameVars.bus_y, busWidth, busHeight);
 
     // game over overlay
@@ -623,6 +655,21 @@
     }, randomBetween(3000, 5000));
   }
 
+  // Annoying feature: Random color changes
+  function randomColorChange() {
+    // Randomize colors
+    randomizeColors();
+    
+    // Wait 3-5 seconds, then restore
+    const restoreDelay = randomBetween(3000, 5000);
+    setTimeout(() => {
+      restoreColors();
+      
+      // Schedule next color change in 10-20 seconds
+      setTimeout(randomColorChange, randomBetween(10000, 20000));
+    }, restoreDelay);
+  }
+
   // Start everything
   spawnAd();
   drawGame();
@@ -638,4 +685,5 @@
   showFakeError();
   showMicrotransaction();
   updateEnergy();
+  randomColorChange();
 })();

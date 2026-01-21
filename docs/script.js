@@ -10,6 +10,8 @@
   const invertChance = 0.10; // 10% per key press
   const breakdownPerMove = 0.0000001; // 1e-7
   const dysenteryPerMove = 0.0000001; // 1e-7
+  const maxRotationDegrees = 4; // max rotation in degrees
+  const rotationOffset = 2; // offset to center rotation range
 
   // Canvas setup with proper pixel ratio
   const canvas = document.getElementById('gameCanvas');
@@ -31,6 +33,7 @@
   // Game state
   let gameVars = null;
   let rotationActive = false; // Track if page is rotated
+  let currentTransform = ''; // Track current transform to avoid conflicts
   function resetGameVars() {
     const ww = canvas.width / (window.devicePixelRatio || 1);
     const wh = canvas.height / (window.devicePixelRatio || 1);
@@ -53,11 +56,11 @@
       return;
     }
 
-    let invert = Math.random() < invertChance;
-    // If page is rotated, also invert controls
-    if (rotationActive) {
-      invert = !invert;
-    }
+    // Separate random inversion from rotation inversion for clarity
+    const randomInvert = Math.random() < invertChance;
+    const rotationInvert = rotationActive;
+    // XOR: inverted if exactly one is true (not both or neither)
+    const invert = randomInvert !== rotationInvert;
     
     if (e.key === 'ArrowLeft') {
       gameVars.facing = invert ? 1 : -1;
@@ -346,6 +349,45 @@
     setTimeout(spawnAd, randomBetween(2000, 8000));
   }
 
+  // Annoying feature: Random favicon changes
+  function randomFavicon() {
+    // Generate a random colored square favicon using data URI
+    const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', 
+                    '#FFA500', '#800080', '#008000', '#000080', '#FF1493', '#00CED1'];
+    const symbols = ['⚠️', '🔥', '💀', '⭐', '❌', '✓', '?', '!', '💩', '👀', '🎯', '⚡'];
+    
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+    
+    // Create canvas for favicon
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+    
+    // Draw background
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, 32, 32);
+    
+    // Draw symbol
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(symbol, 16, 16);
+    
+    // Update favicon
+    let link = document.querySelector("link[rel*='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = canvas.toDataURL('image/png');
+    
+    setTimeout(randomFavicon, randomBetween(3000, 8000));
+  }
+
   // Annoying feature: Random cursor changes
   const cursors = ['progress', 'wait', 'not-allowed', 'help', 'crosshair', 'move', 'grab', 'cell', 'zoom-in', 'zoom-out', 'alias', 'copy', 'no-drop'];
   function randomCursor() {
@@ -375,19 +417,21 @@
   // Annoying feature: Screen shake
   let shakeActive = false;
   function screenShake() {
-    if (shakeActive) return;
+    if (shakeActive || rotationActive) return; // Don't shake during rotation
     shakeActive = true;
     const body = document.body;
-    const originalTransform = body.style.transform;
+    const originalTransform = currentTransform;
     for (let i = 0; i < 10; i++) {
       setTimeout(() => {
         const x = Math.random() * 10 - 5;
         const y = Math.random() * 10 - 5;
-        body.style.transform = `translate(${x}px, ${y}px)`;
+        currentTransform = `translate(${x}px, ${y}px)`;
+        body.style.transform = currentTransform;
       }, i * 50);
     }
     setTimeout(() => {
-      body.style.transform = originalTransform;
+      currentTransform = originalTransform;
+      body.style.transform = currentTransform;
       shakeActive = false;
       setTimeout(screenShake, randomBetween(10000, 20000));
     }, 500);
@@ -395,11 +439,14 @@
 
   // Annoying feature: Random page rotation (also rotates controls)
   function randomRotate() {
-    const angle = (Math.random() * 4 - 2);
+    if (shakeActive) return; // Don't rotate during shake
+    const angle = (Math.random() * maxRotationDegrees - rotationOffset);
     rotationActive = true;
-    document.body.style.transform = `rotate(${angle}deg)`;
+    currentTransform = `rotate(${angle}deg)`;
+    document.body.style.transform = currentTransform;
     setTimeout(() => {
-      document.body.style.transform = '';
+      currentTransform = '';
+      document.body.style.transform = currentTransform;
       rotationActive = false;
       setTimeout(randomRotate, randomBetween(15000, 30000));
     }, randomBetween(3000, 6000));
@@ -466,6 +513,7 @@
   drawGame();
   
   // Start annoying features with delays
+  setTimeout(randomFavicon, 1000);
   setTimeout(randomCursor, 3000);
   setTimeout(randomTitle, 2000);
   setTimeout(screenShake, 10000);

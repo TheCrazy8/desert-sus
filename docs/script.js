@@ -388,6 +388,121 @@
     setTimeout(randomFavicon, randomBetween(3000, 8000));
   }
 
+  // Annoying feature: Fake microtransactions
+  function showMicrotransaction() {
+    const transactions = [
+      { item: 'Extra Life', price: '$4.99', desc: 'Continue your journey!' },
+      { item: 'Speed Boost', price: '$2.99', desc: 'Go 10% faster!' },
+      { item: 'Ad-Free Experience', price: '$9.99', desc: 'Remove all ads*', note: '*Just kidding!' },
+      { item: 'Better Steering', price: '$3.99', desc: 'Reduce veer chance' },
+      { item: 'Road Widener', price: '$5.99', desc: 'Make the road wider' },
+      { item: 'Golden Bus Skin', price: '$7.99', desc: 'Look stylish!' },
+      { item: 'Premium Pass', price: '$14.99', desc: 'Unlock all features' },
+      { item: 'Invincibility', price: '$19.99', desc: 'Never die again!' },
+      { item: 'Time Skip', price: '$1.99', desc: 'Skip 1 minute ahead' },
+      { item: 'Pro Controller', price: '$6.99', desc: 'No more control inversion' }
+    ];
+    
+    const trans = transactions[Math.floor(Math.random() * transactions.length)];
+    
+    const modal = document.createElement('div');
+    modal.className = 'microtransaction-modal';
+    
+    const content = document.createElement('div');
+    content.className = 'microtransaction-content';
+    
+    const header = document.createElement('div');
+    header.className = 'microtransaction-header';
+    header.textContent = '💎 Special Offer! 💎';
+    
+    const itemName = document.createElement('div');
+    itemName.className = 'microtransaction-item';
+    itemName.textContent = trans.item;
+    
+    const price = document.createElement('div');
+    price.className = 'microtransaction-price';
+    price.textContent = trans.price;
+    
+    const desc = document.createElement('div');
+    desc.className = 'microtransaction-desc';
+    desc.textContent = trans.desc;
+    
+    if (trans.note) {
+      const note = document.createElement('div');
+      note.className = 'microtransaction-note';
+      note.textContent = trans.note;
+      desc.appendChild(document.createElement('br'));
+      desc.appendChild(note);
+    }
+    
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'microtransaction-buttons';
+    
+    const buyBtn = document.createElement('button');
+    buyBtn.className = 'microtransaction-buy';
+    buyBtn.textContent = 'BUY NOW';
+    buyBtn.addEventListener('click', () => {
+      // Fake "processing"
+      buyBtn.textContent = 'Processing...';
+      buyBtn.disabled = true;
+      setTimeout(() => {
+        alert('Payment failed! Please try again.');
+        modal.remove();
+      }, 1500);
+    });
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'microtransaction-cancel';
+    cancelBtn.textContent = 'Maybe Later';
+    cancelBtn.addEventListener('click', () => {
+      // Show another prompt asking if they're sure
+      if (Math.random() < 0.7) {
+        alert('Are you sure? This is a LIMITED TIME offer!');
+        if (Math.random() < 0.5) return; // 50% chance to not close
+      }
+      modal.remove();
+    });
+    
+    btnContainer.appendChild(buyBtn);
+    btnContainer.appendChild(cancelBtn);
+    
+    content.appendChild(header);
+    content.appendChild(itemName);
+    content.appendChild(price);
+    content.appendChild(desc);
+    content.appendChild(btnContainer);
+    modal.appendChild(content);
+    
+    document.body.appendChild(modal);
+    
+    // Auto-close after a while if user ignores it
+    setTimeout(() => {
+      if (modal.isConnected) {
+        modal.remove();
+      }
+      setTimeout(showMicrotransaction, randomBetween(15000, 35000));
+    }, 10000);
+  }
+
+  // Annoying feature: Fake "energy system"
+  let energy = 100;
+  function updateEnergy() {
+    energy = Math.max(0, energy - 1);
+    if (energy <= 0 && !gameVars.game_over) {
+      const energyWarning = document.createElement('div');
+      energyWarning.className = 'energy-warning';
+      energyWarning.innerHTML = `
+        <div style="font-size: 24px; font-weight: bold;">⚡ Out of Energy! ⚡</div>
+        <div style="margin: 10px 0;">Wait 30 minutes or purchase more energy!</div>
+        <button class="microtransaction-buy" onclick="this.parentElement.remove(); energy = 100;">Buy Energy $0.99</button>
+      `;
+      document.body.appendChild(energyWarning);
+      setTimeout(() => energyWarning.remove(), 5000);
+      energy = 100; // Reset after showing warning
+    }
+    setTimeout(updateEnergy, randomBetween(30000, 60000));
+  }
+
   // Annoying feature: Random cursor changes
   const cursors = ['progress', 'wait', 'not-allowed', 'help', 'crosshair', 'move', 'grab', 'cell', 'zoom-in', 'zoom-out', 'alias', 'copy', 'no-drop'];
   function randomCursor() {
@@ -439,8 +554,8 @@
 
   // Annoying feature: Random page rotation (also rotates controls)
   function randomRotate() {
-    if (shakeActive) return; // Don't rotate during shake
-    const angle = (Math.random() * maxRotationDegrees - rotationOffset);
+    if (shakeActive || rotationActive) return; // Don't rotate during shake or if already rotating
+    const angle = (Math.random() * maxRotationDegrees * 2) - maxRotationDegrees; // -4 to 4 degrees
     rotationActive = true;
     currentTransform = `rotate(${angle}deg)`;
     document.body.style.transform = currentTransform;
@@ -521,4 +636,6 @@
   setTimeout(showFakeLoading, 20000);
   setTimeout(spawnConfetti, 25000);
   setTimeout(showFakeError, 30000);
+  setTimeout(showMicrotransaction, 12000);
+  setTimeout(updateEnergy, 40000);
 })();

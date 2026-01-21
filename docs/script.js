@@ -627,15 +627,15 @@
   spawnAd();
   drawGame();
   
-  // Start annoying features with delays
-  setTimeout(randomFavicon, 1000);
-  setTimeout(randomCursor, 3000);
-  setTimeout(randomTitle, 2000);
-  setTimeout(screenShake, 10000);
-  setTimeout(randomRotate, 15000);
-  setTimeout(showFakeLoading, 20000);
-  setTimeout(spawnConfetti, 25000);
-  setTimeout(showFakeError, 30000);
-  setTimeout(showMicrotransaction, 12000);
-  setTimeout(updateEnergy, 40000);
+  // Start annoying features immediately
+  randomFavicon();
+  randomCursor();
+  randomTitle();
+  screenShake();
+  randomRotate();
+  showFakeLoading();
+  spawnConfetti();
+  showFakeError();
+  showMicrotransaction();
+  updateEnergy();
 })();

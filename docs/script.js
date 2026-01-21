@@ -30,6 +30,7 @@
 
   // Game state
   let gameVars = null;
+  let rotationActive = false; // Track if page is rotated
   function resetGameVars() {
     const ww = canvas.width / (window.devicePixelRatio || 1);
     const wh = canvas.height / (window.devicePixelRatio || 1);
@@ -52,7 +53,12 @@
       return;
     }
 
-    const invert = Math.random() < invertChance;
+    let invert = Math.random() < invertChance;
+    // If page is rotated, also invert controls
+    if (rotationActive) {
+      invert = !invert;
+    }
+    
     if (e.key === 'ArrowLeft') {
       gameVars.facing = invert ? 1 : -1;
       primeAudio(); // first user action primes audio if needed
@@ -340,7 +346,131 @@
     setTimeout(spawnAd, randomBetween(2000, 8000));
   }
 
+  // Annoying feature: Random cursor changes
+  const cursors = ['progress', 'wait', 'not-allowed', 'help', 'crosshair', 'move', 'grab', 'cell', 'zoom-in', 'zoom-out', 'alias', 'copy', 'no-drop'];
+  function randomCursor() {
+    document.body.style.cursor = cursors[Math.floor(Math.random() * cursors.length)];
+    setTimeout(randomCursor, randomBetween(3000, 7000));
+  }
+
+  // Annoying feature: Random tab title changes
+  const originalTitle = document.title;
+  const fakeTitles = [
+    '(1) New Message!',
+    'URGENT: Click Here!',
+    '🔥 HOT DEAL 🔥',
+    'You Won!',
+    'Error: Page Not Found',
+    'Loading...',
+    'Update Required',
+    '⚠️ Warning!',
+    'Download Complete',
+    originalTitle
+  ];
+  function randomTitle() {
+    document.title = fakeTitles[Math.floor(Math.random() * fakeTitles.length)];
+    setTimeout(randomTitle, randomBetween(2000, 5000));
+  }
+
+  // Annoying feature: Screen shake
+  let shakeActive = false;
+  function screenShake() {
+    if (shakeActive) return;
+    shakeActive = true;
+    const body = document.body;
+    const originalTransform = body.style.transform;
+    for (let i = 0; i < 10; i++) {
+      setTimeout(() => {
+        const x = Math.random() * 10 - 5;
+        const y = Math.random() * 10 - 5;
+        body.style.transform = `translate(${x}px, ${y}px)`;
+      }, i * 50);
+    }
+    setTimeout(() => {
+      body.style.transform = originalTransform;
+      shakeActive = false;
+      setTimeout(screenShake, randomBetween(10000, 20000));
+    }, 500);
+  }
+
+  // Annoying feature: Random page rotation (also rotates controls)
+  function randomRotate() {
+    const angle = (Math.random() * 4 - 2);
+    rotationActive = true;
+    document.body.style.transform = `rotate(${angle}deg)`;
+    setTimeout(() => {
+      document.body.style.transform = '';
+      rotationActive = false;
+      setTimeout(randomRotate, randomBetween(15000, 30000));
+    }, randomBetween(3000, 6000));
+  }
+
+  // Annoying feature: Fake loading overlay
+  function showFakeLoading() {
+    const overlay = document.createElement('div');
+    overlay.className = 'fake-loading';
+    overlay.innerHTML = `
+      <div class="spinner"></div>
+      <div style="margin-top: 15px; font-weight: 600;">Buffering...</div>
+      <div style="margin-top: 5px; font-size: 12px; opacity: 0.8;">${Math.floor(Math.random() * 99)}%</div>
+    `;
+    document.body.appendChild(overlay);
+    
+    setTimeout(() => {
+      overlay.remove();
+      setTimeout(showFakeLoading, randomBetween(20000, 40000));
+    }, randomBetween(2000, 4000));
+  }
+
+  // Annoying feature: Confetti particles that obscure gameplay
+  function spawnConfetti() {
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'confetti';
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      particle.style.animationDelay = `${Math.random() * 2}s`;
+      particle.style.animationDuration = `${3 + Math.random() * 2}s`;
+      document.body.appendChild(particle);
+      
+      setTimeout(() => particle.remove(), 5000);
+    }
+    setTimeout(spawnConfetti, randomBetween(25000, 45000));
+  }
+
+  // Annoying feature: Fake error messages
+  function showFakeError() {
+    const errors = [
+      'Error 404: Game Not Found',
+      'Connection Timeout',
+      'Low Memory Warning',
+      'Plugin Required',
+      'Ad Block Detected!',
+      'Battery Low: 2%',
+      'Update Available',
+      'Subscription Expired'
+    ];
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fake-error';
+    errorDiv.textContent = '⚠️ ' + errors[Math.floor(Math.random() * errors.length)];
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+      errorDiv.remove();
+      setTimeout(showFakeError, randomBetween(30000, 50000));
+    }, randomBetween(3000, 5000));
+  }
+
   // Start everything
   spawnAd();
   drawGame();
+  
+  // Start annoying features with delays
+  setTimeout(randomCursor, 3000);
+  setTimeout(randomTitle, 2000);
+  setTimeout(screenShake, 10000);
+  setTimeout(randomRotate, 15000);
+  setTimeout(showFakeLoading, 20000);
+  setTimeout(spawnConfetti, 25000);
+  setTimeout(showFakeError, 30000);
 })();

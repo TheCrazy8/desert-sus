@@ -10,8 +10,8 @@
   const invertChance = 0.10; // 10% per key press
   const breakdownPerMove = 0.0000001; // 1e-7
   const dysenteryPerMove = 0.0000001; // 1e-7
-  const maxRotationDegrees = 4; // max rotation in degrees
-  const rotationOffset = 2; // offset to center rotation range
+  const maxRotationDegrees = 90; // max rotation in degrees
+  const rotationOffset = 5; // offset to center rotation range
 
   // Canvas setup with proper pixel ratio
   const canvas = document.getElementById('gameCanvas');

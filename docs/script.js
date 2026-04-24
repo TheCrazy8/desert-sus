@@ -365,7 +365,16 @@
           removeAd();
         }
       });
-      btn.addEventListener('click', () => removeAd());
+      btn.addEventListener('click', () => {
+        const newX = randomBetween(0, 400 - 80);
+        const newY = randomBetween(0, 120 - 30);
+        btn.style.left = `${newX}px`;
+        btn.style.top = `${newY}px`;
+        escapeCounter.count++;
+        if (escapeCounter.count >= escapeCounter.max) {
+          removeAd();
+        }
+      });
       ad.appendChild(btn);
     }
 
@@ -564,21 +573,24 @@
   // Annoying feature: Screen shake
   let shakeActive = false;
   function screenShake() {
-    if (shakeActive || rotationActive) return; // Don't shake during rotation
+    if (shakeActive || rotationActive) {
+      setTimeout(screenShake, randomBetween(10000, 20000)); // reschedule even when skipped
+      return;
+    }
     shakeActive = true;
-    const body = document.body;
+    const wrapper = document.getElementById('game-wrapper');
     const originalTransform = currentTransform;
     for (let i = 0; i < 10; i++) {
       setTimeout(() => {
         const x = Math.random() * 10 - 5;
         const y = Math.random() * 10 - 5;
         currentTransform = `translate(${x}px, ${y}px)`;
-        body.style.transform = currentTransform;
+        wrapper.style.transform = currentTransform;
       }, i * 50);
     }
     setTimeout(() => {
       currentTransform = originalTransform;
-      body.style.transform = currentTransform;
+      wrapper.style.transform = currentTransform;
       shakeActive = false;
       setTimeout(screenShake, randomBetween(10000, 20000));
     }, 500);
@@ -586,14 +598,18 @@
 
   // Annoying feature: Random page rotation (also rotates controls)
   function randomRotate() {
-    if (shakeActive || rotationActive) return; // Don't rotate during shake or if already rotating
-    const angle = (Math.random() * maxRotationDegrees * 2) - maxRotationDegrees; // -4 to 4 degrees
+    if (shakeActive || rotationActive) {
+      setTimeout(randomRotate, randomBetween(15000, 30000)); // reschedule even when skipped
+      return;
+    }
+    const angle = (Math.random() * maxRotationDegrees * 2) - maxRotationDegrees;
     rotationActive = true;
     currentTransform = `rotate(${angle}deg)`;
-    document.body.style.transform = currentTransform;
+    const wrapper = document.getElementById('game-wrapper');
+    wrapper.style.transform = currentTransform;
     setTimeout(() => {
       currentTransform = '';
-      document.body.style.transform = currentTransform;
+      wrapper.style.transform = currentTransform;
       rotationActive = false;
       setTimeout(randomRotate, randomBetween(15000, 30000));
     }, randomBetween(3000, 6000));
